@@ -14,7 +14,7 @@
 #
 
 # Defaults
-DAEMON_HOME=/opt/shelvesd
+DAEMON_HOME=/opt/shelvesd/lib
 DAEMON_MAIN=shelvesd.rb
 DAEMON_ARGS=""
 

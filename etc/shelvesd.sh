@@ -32,15 +32,15 @@ start() {
     cd $DAEMON_HOME
     RACK_ENV=production $RUBY $DAEMON_MAIN $DAEMON_ARGS
 
-    sleep 2
+    #sleep 2
 
-    status -p $APP_PIDFILE &> /dev/null && echo_success || echo_failure
-    RETVAL=$?
+    #status -p $APP_PIDFILE &> /dev/null && echo_success || echo_failure
+    #RETVAL=$?
 
-    if [ $RETVAL -eq 0 ]; then
-        touch $DAEMON_LOCKFILE
-        cat $APP_PIDFILE > $DAEMON_PIDFILE
-    fi
+    #if [ $RETVAL -eq 0 ]; then
+    #    touch $DAEMON_LOCKFILE
+    #    cat $APP_PIDFILE > $DAEMON_PIDFILE
+    #fi
 
     echo
 }
@@ -48,10 +48,12 @@ start() {
 stop() {
     echo -n $"Shutting down ${NAME}: "
 
-    killproc -p $DAEMON_PIDFILE
-    RETVAL=$?
+    # this is really aggressive and needs to use a captured pid
+    killall -q -u root ruby
+    #killproc -p $DAEMON_PIDFILE
+    #RETVAL=$?
 
-    [ $RETVAL -eq 0 ] && /bin/rm -f $DAEMON_LOCKFILE $DAEMON_PIDFILE
+    #[ $RETVAL -eq 0 ] && /bin/rm -f $DAEMON_LOCKFILE $DAEMON_PIDFILE
 
     echo
 }

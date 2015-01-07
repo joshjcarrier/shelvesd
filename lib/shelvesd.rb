@@ -3,6 +3,8 @@ require 'sinatra'
 require 'pi_piper'
 include PiPiper
 
+Dir[File.dirname(__FILE__) + '/shelvesd/*.rb'].each {|file| require file}
+
 set :bind, '0.0.0.0'
 
 configure :production do

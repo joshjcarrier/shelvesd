@@ -16,7 +16,7 @@ end
 get '/api/v1/lights', :provides => 'json' do
 
   pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
-  { :on => pin.last_value == true }.to_json
+  { :on => pin.on? }.to_json
 end
 
 patch '/api/v1/lights', :provides => 'json' do
@@ -30,7 +30,7 @@ patch '/api/v1/lights', :provides => 'json' do
   else
     pin.off
   end
-  { :on => pin.last_value == true }.to_json
+  { :on => pin.on? }.to_json
 end
 
 # temporary
@@ -38,13 +38,13 @@ get '/api/v1/lights/on', :provides => 'html' do
   pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
 
   pin.on
-  '<html><body><a href=\'off\'>off</a></body></html>'
+  '<html><body><font size="72pt"><a href=\'off\'>off</a></font></body></html>'
 end
 get '/api/v1/lights/off', :provides => 'html' do
   pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
 
   pin.off
-  '<html><body><a href=\'on\'>on</a></body></html>'
+  '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
 end
 
 get '/api/v1/shelves', :provides => 'json' do

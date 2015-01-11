@@ -27,6 +27,13 @@ end
 def lcd_write_banner
   lcd_write('shelvesd', 1)
 
+  weather_json = `curl -sS http://api.openweathermap.org/data/2.5/weather?id=5809844`
+  weather = JSON.parse weather_json
+  sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%H:%M%p")
+  sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%H:%M%p")
+
+  lcd_write("Sun #{sunrise}-#{sunset}", 2)
+
   sha1 = `git rev-list HEAD --max-count=1`
   lcd_write("git:#{sha1}", 4)
 end

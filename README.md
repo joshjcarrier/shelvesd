@@ -24,3 +24,7 @@ Remove I2C from Blacklist:
 
 Add this to the end of /etc/modules
 > i2c-dev
+
+
+And install I2C device support for Python
+> apt-get install python-smbus 

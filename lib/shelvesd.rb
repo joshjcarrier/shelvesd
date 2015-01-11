@@ -7,7 +7,7 @@ Dir[File.dirname(__FILE__) + '/shelvesd/*.rb'].each {|file| require file}
 
 set :bind, '0.0.0.0'
 pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
-pin.on # power on 
+pin.on # power on
 
 #########################
 @@lcd_lines = []
@@ -39,7 +39,7 @@ configure :production do
 end
 
 get '/', :provides => 'html' do
-  '<html><body><a href=\'/api/v1/lights\'>/api/v1/lights</a><br/><a href=\'/api/v1/shelves\'>/api/v1/shelves</a></body></html>'
+  '<html><body><a href=\'/settings\'>Settings</a></body></html>'
 end
 
 get '/api/v1/lights', :provides => 'json' do

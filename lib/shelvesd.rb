@@ -15,7 +15,12 @@ pin.on # power on
 def lcd_write(str, linenum)
   @@lcd_lines[linenum-1] = str
 
-  cmd = "python #{File.dirname(__FILE__)}/../ext/lcd/lcd.py '#{@@lcd_lines[0]}' '#{@@lcd_lines[1]}' '#{@@lcd_lines[2]}' '#{@@lcd_lines[3]}'"
+  cmd = "python #{File.dirname(__FILE__)}/../ext/lcd/lcd.py txt '#{@@lcd_lines[0]}' '#{@@lcd_lines[1]}' '#{@@lcd_lines[2]}' '#{@@lcd_lines[3]}'"
+  system cmd
+end
+
+def lcd_backlight_off
+  cmd = "python #{File.dirname(__FILE__)}/../ext/lcd/lcd.py bl 0"
   system cmd
 end
 
@@ -62,11 +67,17 @@ end
 get '/api/v1/lights/on', :provides => 'html' do
   pin.on
   lcd_write('Lights: enabled', 3)
-  '<html><body><font size="72pt"><a href=\'off\'>off</a></font></body></html>'
+  '<html><body><font size="72pt"><a href=\'off\'>off</a><br/><a href=\'movie\'>movie mode</a></font></body></html>'
 end
 get '/api/v1/lights/off', :provides => 'html' do
   pin.off
   lcd_write('Lights: disabled', 3)
+  '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
+end
+
+get '/api/v1/lights/movie', :provides => 'html' do
+  pin.off
+  lcd_backlight_off
   '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
 end
 

@@ -8,9 +8,15 @@ ROWS=4
 
 lcd = lcddriver.lcd()
 
-i = 0
-for arg in sys.argv[1:]:
-  i+=1
-  if i > ROWS:
-    continue
-  lcd.lcd_display_string(sys.argv[i][:COLS], i)
+if sys.argv[1] == 'txt':
+  i = 0
+  for arg in sys.argv[2:]:
+    i+=1
+    if i > ROWS:
+      continue
+    lcd.lcd_display_string(sys.argv[i+1][:COLS], i)
+elif sys.argv[1] == 'bl':
+  if sys.argv[2] == '1':
+    lcd.lcd_backlight_on()
+  else:
+    lcd.lcd_backlight_off()

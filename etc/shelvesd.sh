@@ -30,7 +30,7 @@ start() {
     echo -n $"Starting ${NAME}: "
 
     cd $DAEMON_HOME
-    RACK_ENV=production $RUBY $DAEMON_MAIN $DAEMON_ARGS
+    RACK_ENV=production $RUBY $DAEMON_MAIN $DAEMON_ARGS &
 
     #sleep 2
 

@@ -32,10 +32,10 @@ def lcd_write_banner
   sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%H:%M%p")
   sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%H:%M%p")
 
-  lcd_write("Sun #{sunrise}-#{sunset}", 2)
+  lcd_write("DAY: #{sunrise}-#{sunset}", 2)
 
   sha1 = `git rev-list HEAD --max-count=1`
-  lcd_write("git:#{sha1}", 4)
+  lcd_write("GIT:#{sha1}", 4)
 end
 
 lcd_write_banner
@@ -62,10 +62,10 @@ patch '/api/v1/lights', :provides => 'json' do
 
   if data['on'] == true then
     pin.on
-    lcd_write('Lights: enabled', 3)
+    lcd_write('LIGHTS: on', 3)
   else
     pin.off
-    lcd_write('Lights: disabled', 3)
+    lcd_write('LIGHTS: off', 3)
   end
   pin.read #force read due to pi_piper bug before calling on?
   { :on => pin.on? }.to_json
@@ -74,12 +74,12 @@ end
 # temporary
 get '/api/v1/lights/on', :provides => 'html' do
   pin.on
-  lcd_write('Lights: enabled', 3)
+  lcd_write('LIGHTS: on', 3)
   '<html><body><font size="72pt"><a href=\'off\'>off</a><br/><a href=\'movie\'>movie mode</a></font></body></html>'
 end
 get '/api/v1/lights/off', :provides => 'html' do
   pin.off
-  lcd_write('Lights: disabled', 3)
+  lcd_write('LIGHTS: off', 3)
   '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
 end
 

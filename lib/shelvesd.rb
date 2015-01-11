@@ -39,7 +39,7 @@ configure :production do
 end
 
 get '/', :provides => 'html' do
-  '<html><body><a href=\'/settings\'>Settings</a></body></html>'
+  '<html><body><a href=\'/settings.html\'>Settings</a></body></html>'
 end
 
 get '/api/v1/lights', :provides => 'json' do

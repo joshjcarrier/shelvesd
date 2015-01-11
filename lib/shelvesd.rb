@@ -39,7 +39,8 @@ configure :production do
 end
 
 get '/', :provides => 'html' do
-  '<html><body><a href=\'/settings.html\'>Settings</a></body></html>'
+  lcd_output = @@lcd_lines.join('<br/>')
+  "<html><body><table><tr><td><iframe src='http://shelvy.int.joshjcarrier.com:8124' width='640px' height='480px'></iframe></td><td valign='top'>#{lcd_output}<hr/><a href=\'/settings.html\'>Settings</a></td></tr></table></body></html>"
 end
 
 get '/api/v1/lights', :provides => 'json' do

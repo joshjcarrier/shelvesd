@@ -50,6 +50,10 @@ stop() {
 
     # this is really aggressive and needs to use a captured pid
     killall -q -u root ruby
+
+    cd $DAEMON_HOME
+    python ../ext/lcd/lcd.py bl 0
+
     #killproc -p $DAEMON_PIDFILE
     #RETVAL=$?
 

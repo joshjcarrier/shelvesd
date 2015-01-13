@@ -26,21 +26,27 @@ def lcd_backlight_off
 end
 
 def lcd_write_banner
+  #line 1
   hostname = `hostname -s`[0..-2]
-  lcd_write("shelvesd@#{hostname}", 1)
 
+  # line 2
   weather_json = `curl -sS http://api.openweathermap.org/data/2.5/weather?id=5809844`
   weather = JSON.parse weather_json
   sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%I:%M%p")
   sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%I:%M%p")
 
-  lcd_write("DAY: #{sunrise}-#{sunset}", 2)
-
+  # line 3
   ip = `ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`[0..-2]
-  lcd_write("IP :   #{ip}", 3)
 
+  # line 4
   sha1 = `git rev-list HEAD --max-count=1`
-  lcd_write("GIT: #{sha1}", 4)
+
+  @@lcd.write({
+        :line1 => "shelvesd@#{hostname}",
+        :line2 => "DAY: #{sunrise}-#{sunset}",
+        :line3 => "IP :   #{ip}",
+        :line4 => "GIT: #{sha1}"
+  })
 end
 
 lcd_write_banner

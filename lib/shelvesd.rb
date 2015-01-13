@@ -1,9 +1,11 @@
+require_relative 'displays'
+
 require 'json'
 require 'sinatra'
 require 'pi_piper'
 include PiPiper
 
-Dir[File.dirname(__FILE__) + '/shelvesd/*.rb'].each {|file| require file}
+#Dir[File.dirname(__FILE__) + '/shelvesd/*.rb'].each {|file| require file}
 
 set :bind, '0.0.0.0'
 pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
@@ -11,17 +13,16 @@ pin.on # power on
 
 #########################
 @@lcd_lines = ['', '', '', '']
+@@lcd = Display::Factory.create
 
 def lcd_write(str, linenum)
   @@lcd_lines[linenum-1] = str
 
-  cmd = "python #{File.dirname(__FILE__)}/../ext/lcd/lcd.py txt '#{@@lcd_lines[0]}' '#{@@lcd_lines[1]}' '#{@@lcd_lines[2]}' '#{@@lcd_lines[3]}'"
-  system cmd
+  @@lcd.write({:line1=>@@lcd_lines[0], :line2=>@@lcd_lines[1], :line3=>@@lcd_lines[2], :line4=>@@lcd_lines[3]})
 end
 
 def lcd_backlight_off
-  cmd = "python #{File.dirname(__FILE__)}/../ext/lcd/lcd.py bl 0"
-  system cmd
+  @@lcd.disable
 end
 
 def lcd_write_banner
@@ -54,7 +55,7 @@ get '/', :provides => 'html' do
 end
 
 get '/api/v1/lcd/1', :provides => 'json' do
-  { 
+  {
     :line1 => @@lcd_lines[0][0,20],
     :line2 => @@lcd_lines[1][0,20],
     :line3 => @@lcd_lines[2][0,20],

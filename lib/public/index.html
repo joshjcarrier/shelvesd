@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+	<title>shelvesd</title>
+
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
+	<br/>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-8">
+				<img src='http://shelvy.int.joshjcarrier.com:8124' class="img-responsive" />
+			</div>
+			<div class="col-sm-4">
+				<div class="well" style="font-family: monospace">
+				<div id="lcd_one"></div>
+                                <div id="lcd_two"></div>
+                                <div id="lcd_three"></div>
+                                <div id="lcd_four"></div>
+				</div><br/>
+				<iframe src="/settings.html"></iframe>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script>
+                (function($)
+{
+    $(document).ready(function()
+    {
+        $.ajaxSetup(
+        {
+            cache: false
+        });
+
+	var getLcdFn = function()
+        {
+           $.get( "/api/v1/lcd/1", function( data ) {
+                $("#lcd_one").html(data.line1.replace(/ /g, '&nbsp;'));
+                $("#lcd_two").html(data.line2.replace(/ /g, '&nbsp;'));
+                $("#lcd_three").html(data.line3.replace(/ /g, '&nbsp;'));
+                $("#lcd_four").html(data.line4.replace(/ /g, '&nbsp;'));
+	   }, "json");
+        };
+
+	getLcdFn();
+        setInterval(getLcdFn, 10000);
+    });
+})(jQuery);
+        </script>
+</body>
+</html>

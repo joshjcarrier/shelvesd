@@ -10,7 +10,7 @@ pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
 pin.on # power on
 
 #########################
-@@lcd_lines = []
+@@lcd_lines = ['', '', '', '']
 
 def lcd_write(str, linenum)
   @@lcd_lines[linenum-1] = str
@@ -30,16 +30,16 @@ def lcd_write_banner
 
   weather_json = `curl -sS http://api.openweathermap.org/data/2.5/weather?id=5809844`
   weather = JSON.parse weather_json
-  sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%H:%M%p")
-  sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%H:%M%p")
+  sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%I:%M%p")
+  sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%I:%M%p")
 
   lcd_write("DAY: #{sunrise}-#{sunset}", 2)
 
   ip = `ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`[0..-2]
-  lcd_write("IP : #{ip}", 3)
+  lcd_write("IP :   #{ip}", 3)
 
   sha1 = `git rev-list HEAD --max-count=1`
-  lcd_write("GIT:#{sha1}", 4)
+  lcd_write("GIT: #{sha1}", 4)
 end
 
 lcd_write_banner
@@ -50,8 +50,16 @@ configure :production do
 end
 
 get '/', :provides => 'html' do
-  lcd_output = @@lcd_lines.join('<br/>')
-  "<html><body><table><tr><td><iframe src='http://shelvy.int.joshjcarrier.com:8124' width='640px' height='480px'></iframe></td><td valign='top'>#{lcd_output}<hr/><a href=\'/settings.html\'>Settings</a></td></tr></table></body></html>"
+  redirect '/index.html'
+end
+
+get '/api/v1/lcd/1', :provides => 'json' do
+  { 
+    :line1 => @@lcd_lines[0][0,20],
+    :line2 => @@lcd_lines[1][0,20],
+    :line3 => @@lcd_lines[2][0,20],
+    :line4 => @@lcd_lines[3][0,20]
+  }.to_json
 end
 
 get '/api/v1/lights', :provides => 'json' do

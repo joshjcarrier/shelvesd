@@ -12,14 +12,7 @@ pin = PiPiper::Pin.new(:pin => 17, :direction => :out)
 pin.on # power on
 
 #########################
-@@lcd_lines = ['', '', '', '']
 @@lcd = Display::Factory.create
-
-def lcd_write(str, linenum)
-  @@lcd_lines[linenum-1] = str
-
-  @@lcd.write({:line1=>@@lcd_lines[0], :line2=>@@lcd_lines[1], :line3=>@@lcd_lines[2], :line4=>@@lcd_lines[3]})
-end
 
 def lcd_backlight_off
   @@lcd.disable
@@ -61,12 +54,7 @@ get '/', :provides => 'html' do
 end
 
 get '/api/v1/lcd/1', :provides => 'json' do
-  {
-    :line1 => @@lcd_lines[0][0,20],
-    :line2 => @@lcd_lines[1][0,20],
-    :line3 => @@lcd_lines[2][0,20],
-    :line4 => @@lcd_lines[3][0,20]
-  }.to_json
+  @@lcd.read.to_json
 end
 
 get '/api/v1/lights', :provides => 'json' do
@@ -81,10 +69,10 @@ patch '/api/v1/lights', :provides => 'json' do
 
   if data['on'] == true then
     pin.on
-    lcd_write('LIGHTS: on', 3)
+    @@lcd.write({:line3 => 'LIGHTS: on'})
   else
     pin.off
-    lcd_write('LIGHTS: off', 3)
+    @@lcd.write({:line3 => 'LIGHTS: off'})
   end
   pin.read #force read due to pi_piper bug before calling on?
   { :on => pin.on? }.to_json
@@ -93,12 +81,12 @@ end
 # temporary
 get '/api/v1/lights/on', :provides => 'html' do
   pin.on
-  lcd_write('LIGHTS: on', 3)
+  @@lcd.write({:line3 => 'LIGHTS: on'})
   '<html><body><font size="72pt"><a href=\'off\'>off</a><br/><a href=\'movie\'>movie mode</a></font></body></html>'
 end
 get '/api/v1/lights/off', :provides => 'html' do
   pin.off
-  lcd_write('LIGHTS: off', 3)
+  @@lcd.write({:line3 => 'LIGHTS: off'})
   '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
 end
 
@@ -108,6 +96,3 @@ get '/api/v1/lights/movie', :provides => 'html' do
   '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
 end
 
-get '/api/v1/shelves', :provides => 'json' do
-  'Hello world!'
-end

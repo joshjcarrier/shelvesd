@@ -16,11 +16,11 @@ module Display
         end
 
         def read
-            @display.read
+            @line_cache
         end
 
         def write(values)
-            @line_cache = @line_cache.merge values
+            @line_cache = @line_cache.merge(values){ |key, old, new| new[0, 20] }
             @display.write(values)
         end
     end

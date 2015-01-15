@@ -20,8 +20,9 @@ module Display
         end
 
         def write(values)
-            @line_cache = @line_cache.merge(values){ |key, old, new| new[0, 20] }
-            @display.write(values)
+            @line_cache = @line_cache.merge values
+            @line_cache = @display.write(@line_cache)
+	    @line_cache
         end
     end
 end

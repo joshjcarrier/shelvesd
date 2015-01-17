@@ -1,6 +1,13 @@
 # driver from http://www.recantha.co.uk/blog/?p=4849
-import lcddriver
+
 import sys
+
+try:
+  import lcddriver
+except ImportError, e:
+  print >> sys.stderr, 'Failed to load lcddriver. Possibly because package python-smbus is missing or not supported.'
+  sys.exit(1)
+
 from time import *
 
 COLS=20

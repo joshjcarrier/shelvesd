@@ -3,12 +3,16 @@ Dir[File.dirname(__FILE__) + '/display/*.rb'].each {|file| require file}
 module Display
     class Factory
         def self.create
-            display = Display::LCD.new({
+            home_display = Display::LCD.new({
                 :logger => SimpleLogger.new
             })
 
-            display = Display::Screen.new({
-                :display => display
+            home_display = Display::Screen.new({
+                :display => home_display
+            })
+
+            display = Display::Virtual.new({
+                :displays => [home_display]
             })
 
             display

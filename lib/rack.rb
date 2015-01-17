@@ -56,6 +56,10 @@ module Rack
       @lcd.read.to_json
     end
 
+    post '/api/v1/lcd/1/next', :provides => 'json' do
+      @lcd.next unless !@lcd.respond_to?(:next)
+    end
+
     get '/api/v1/lights', :provides => 'json' do
       { :on => @light.on? }.to_json
     end

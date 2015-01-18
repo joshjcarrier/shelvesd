@@ -1,8 +1,6 @@
 module Display
     class Screen
-        def initialize(params)
-            @display = params[:display]
-
+        def initialize(options = {})
             @line_cache = {
                 :line1 => '',
                 :line2 => '',
@@ -12,7 +10,6 @@ module Display
         end
 
         def disable
-            @display.disable
         end
 
         def read
@@ -21,8 +18,6 @@ module Display
 
         def write(values)
             @line_cache = @line_cache.merge values
-            @line_cache = @display.write(@line_cache)
-	    @line_cache
         end
     end
 end

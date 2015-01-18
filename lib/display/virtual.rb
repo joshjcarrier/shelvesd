@@ -1,20 +1,27 @@
 module Display
   class Virtual
-      def initialize(params)
-        @displays = params[:displays] || []
+      def initialize(options = {})
+        @display = options[:display]
+        @screens = []
         @current_index = 0
       end
 
+      def add_screen
+        screen = Display::Screen.new
+        @screens.push screen
+        screen
+      end
+
       def disable
-        @displays[@current_index].disable
+        current.disable
       end
 
       def next
-        if @displays.length == 1
+        if @screens.length == 1
           return
         end
-        
-        if @current_index == @displays.length
+
+        if @current_index == @screens.length
           @current_index = 0
         else
           @current_index += 1
@@ -24,12 +31,12 @@ module Display
       end
 
       def previous
-        if @displays.length == 1
+        if @screens.length == 1
           return
         end
 
         if @current_index == 0
-          @current_index = @displays.length - 1
+          @current_index = @screens.length - 1
         else
           @current_index -= 1
         end
@@ -38,11 +45,23 @@ module Display
       end
 
       def read
-        @displays[@current_index].read
+        current.read
       end
 
       def write(values = {})
-        @displays[@current_index].write values
+        current.write values
+        set_values = @display.write current.read # writing to the display has a possibility of value sanitization
+        current.write set_values
+        set_values
+      end
+
+      private
+      def current
+        if @screens.length == 0
+          add_screen
+        end
+
+        @screens[@current_index]
       end
   end
 end

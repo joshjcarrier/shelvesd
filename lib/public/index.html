@@ -42,10 +42,10 @@
 	var getLcdFn = function()
         {
            $.get( "/api/v1/lcd/1", function( data ) {
-                $("#lcd_one").html(data.line1.replace(/ /g, '&nbsp;'));
-                $("#lcd_two").html(data.line2.replace(/ /g, '&nbsp;'));
-                $("#lcd_three").html(data.line3.replace(/ /g, '&nbsp;'));
-                $("#lcd_four").html(data.line4.replace(/ /g, '&nbsp;'));
+                $("#lcd_one").html(data.line1.replace(/ /g, '&nbsp;') + '&nbsp;');
+                $("#lcd_two").html(data.line2.replace(/ /g, '&nbsp;') + '&nbsp;');
+                $("#lcd_three").html(data.line3.replace(/ /g, '&nbsp;') + '&nbsp;');
+                $("#lcd_four").html(data.line4.replace(/ /g, '&nbsp;') + '&nbsp;');
 	   }, "json");
         };
 

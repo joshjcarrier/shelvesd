@@ -1,25 +1,37 @@
-screens:
-  - line1:
-    line2:
-    line3:
-    line4:
-  - line1:
-    line2:
-    line3:
-    line4:
-  - line1:
-    line2:
-    line3:
-    line4:    
-  - line1:
-    line2:
-    line3:
-    line4:    
-  - line1:
-    line2:
-    line3:
-    line4:
-  - line1:
-    line2:
-    line3:
-    line4:
+seedlings:
+  - name:                 Queenette Thai Basil
+    start_month:          3
+    light:                full
+    germinate_min_days:   7
+    germinate_max_days:   14
+    harvest_days:         30
+  - name:                 Bac Lieu Cilantro
+    start_month:          1
+    light:                full
+    germinate_min_days:   10
+    germinate_max_days:   10
+    harvest_days:         30
+  - name:                 Baby Pak Choi
+    start_month:          2
+    light:                full
+    germinate_min_days:   7
+    germinate_max_days:   10
+    harvest_days:         45
+  - name:                 Catnip
+    start_month:          1
+    light:                part sun
+    germinate_min_days:   10
+    germinate_max_days:   15
+    harvest_days:         30
+  - name:                 Bush Champ Cucumber
+    start_month:          4
+    light:                full
+    germinate_min_days:   7
+    germinate_max_days:   14
+    harvest_days:         55
+  - name:                 Cayenne Pepper
+    start_month:          4
+    light:                full
+    germinate_min_days:   10
+    germinate_max_days:   12
+    harvest_days:         72

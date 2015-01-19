@@ -31,13 +31,13 @@ def restore_screens(display)
   write_home display
 
   config = YAML.load_file(File.dirname(__FILE__) + "/../configuration.yml")
-  config["screens"].each do |screen|
+  config['seedlings'].each_slice(4) do |group|
     display.write({
-        :line1 => screen['line1'] || '',
-        :line2 => screen['line2'] || '',
-        :line3 => screen['line3'] || '',
-        :line4 => screen['line4'] || ''
-  })
+        :line1 => if group[0] != nil then group[0]['name'] else '' end,
+        :line2 => if group[1] != nil then group[1]['name'] else '' end,
+        :line3 => if group[2] != nil then group[2]['name'] else '' end,
+        :line4 => if group[3] != nil then group[3]['name'] else '' end
+    })
   end
 end 
 

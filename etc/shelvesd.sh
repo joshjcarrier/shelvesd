@@ -30,6 +30,8 @@ start() {
     echo -n $"Starting ${NAME}: "
 
     cd $DAEMON_HOME
+    python ../ext/lcd/lcd.py txt "Booting shelvesd..."
+
     RACK_ENV=production $RUBY $DAEMON_MAIN $DAEMON_ARGS &
 
     #sleep 2

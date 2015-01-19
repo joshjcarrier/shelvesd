@@ -32,8 +32,14 @@ module Rack
       @display.read.to_json
     end
 
-    post '/api/v1/lcd/1/next', :provides => 'json' do
+    post '/api/v1/system/tick', :provides => 'json' do
       @display.next
+      return {:message => 'OK'}.to_json
+    end
+
+    post '/api/v1/system/upgrade', :provides => 'json' do
+      cmd = "git pull origin master && make -f #{IO::File.dirname(__FILE__)}/../Makefile install"
+      system cmd
       return {:message => 'OK'}.to_json
     end
 

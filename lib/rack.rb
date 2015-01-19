@@ -3,49 +3,25 @@ require 'sinatra/base'
 
 module Rack
   class Sinatra < Sinatra::Base
-    set :bind, '0.0.0.0'
 
     def initialize(app = nil)
       super app
-      @lcd = @@lcd
-      @light = @@light
-
-      @light.on
-      lcd_write_banner
+      @display = settings.display
+      @light = settings.light
     end
 
     def self.run!(options)
-      @@lcd = options[:lcd]
-      @@light = options[:light]
+      configure do
+        set :display => options[:display]
+        set :light => options[:light]
+        set :bind, '0.0.0.0'
+      end
+
+      configure :production do
+        set :port, 8123
+      end
+
       super
-    end
-
-    def lcd_write_banner
-      #line 1
-      hostname = `hostname -s`[0..-2]
-
-      # line 2
-      weather_json = `curl -sS http://api.openweathermap.org/data/2.5/weather?id=5809844`
-      weather = JSON.parse weather_json
-      sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%I:%M%p")
-      sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%I:%M%p")
-
-      # line 3
-      ip = `ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`[0..-2]
-
-      # line 4
-      sha1 = `git rev-list HEAD --max-count=1`
-
-      @lcd.write({
-            :line1 => "shelvesd@#{hostname}",
-            :line2 => "DAY: #{sunrise}-#{sunset}",
-            :line3 => "IP :   #{ip}",
-            :line4 => "GIT: #{sha1}"
-      })
-    end
-
-    configure :production do
-      set :port, 8123
     end
 
     get '/', :provides => 'html' do
@@ -53,11 +29,12 @@ module Rack
     end
 
     get '/api/v1/lcd/1', :provides => 'json' do
-      @lcd.read.to_json
+      @display.read.to_json
     end
 
     post '/api/v1/lcd/1/next', :provides => 'json' do
-      @lcd.next unless !@lcd.respond_to?(:next)
+      @display.next
+      return {:message => 'OK'}.to_json
     end
 
     get '/api/v1/lights', :provides => 'json' do
@@ -70,10 +47,8 @@ module Rack
 
       if data['on'] == true then
         @light.on
-        @lcd.write({:line3 => 'LIGHTS: on'})
       else
         @light.off
-        @lcd.write({:line3 => 'LIGHTS: off'})
       end
       { :on => @light.on? }.to_json
     end
@@ -81,18 +56,16 @@ module Rack
     # temporary
     get '/api/v1/lights/on', :provides => 'html' do
       @light.on
-      @lcd.write({:line3 => 'LIGHTS: on'})
       '<html><body><font size="72pt"><a href=\'off\'>off</a><br/><a href=\'movie\'>movie mode</a></font></body></html>'
     end
     get '/api/v1/lights/off', :provides => 'html' do
       @light.off
-      @lcd.write({:line3 => 'LIGHTS: off'})
       '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
     end
 
     get '/api/v1/lights/movie', :provides => 'html' do
       @light.off
-      @lcd.disable
+      @display.disable
       '<html><body><font size="72pt"><a href=\'on\'>on</a></font></body></html>'
     end
   end

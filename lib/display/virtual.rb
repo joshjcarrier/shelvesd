@@ -6,62 +6,58 @@ module Display
         @current_index = 0
       end
 
-      def add_screen
-        screen = Display::Screen.new
-        @screens.push screen
-        screen
-      end
-
       def disable
-        current.disable
+        @display.disable
       end
 
       def next
-        if @screens.length == 1
-          return
-        end
-
-        if @current_index == @screens.length
+        if @current_index >= @screens.length - 1
           @current_index = 0
         else
           @current_index += 1
         end
 
-        write
+        display current
       end
 
       def previous
-        if @screens.length == 1
-          return
-        end
-
-        if @current_index == 0
-          @current_index = @screens.length - 1
+        if @current_index <= 0
+          @current_index = [0, @screens.length - 1].max
         else
           @current_index -= 1
         end
 
-        write
+        display current
       end
 
       def read
+        return {} if current == nil
         current.read
       end
 
       def write(values = {})
-        current.write values
-        set_values = @display.write current.read # writing to the display has a possibility of value sanitization
-        current.write set_values
+        screen = Display::Screen.new
+        set_values = screen.write values
+        @screens.push screen
+
+        if current == screen
+          display screen
+        end
+
         set_values
       end
 
       private
       def current
-        if @screens.length == 0
-          add_screen
-        end
-
         @screens[@current_index]
+      end
+
+      def display(screen, values = {})
+        return if screen == nil
+        
+        set_values = @display.write screen.read # writing to the display has a possibility of value sanitization
+        screen.write set_values
+        set_values
       end
   end
 end

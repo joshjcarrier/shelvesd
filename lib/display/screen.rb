@@ -9,9 +9,6 @@ module Display
             }
         end
 
-        def disable
-        end
-
         def read
             @line_cache
         end

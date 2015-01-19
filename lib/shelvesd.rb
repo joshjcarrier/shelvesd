@@ -1,3 +1,4 @@
+require 'yaml'
 require_relative 'displays'
 require_relative 'lights'
 require_relative 'rack'
@@ -26,6 +27,20 @@ def write_home(display)
   })
 end
 
+def restore_screens(display)
+  write_home display
+
+  config = YAML.load_file(File.dirname(__FILE__) + "/../configuration.yml")
+  config["screens"].each do |screen|
+    display.write({
+        :line1 => screen['line1'] || '',
+        :line2 => screen['line2'] || '',
+        :line3 => screen['line3'] || '',
+        :line4 => screen['line4'] || ''
+  })
+  end
+end 
+
 display = Display::Factory.create
 light = Light::Factory.create
 
@@ -33,7 +48,7 @@ light = Light::Factory.create
 # TODO light according to schedule
 light.on
 
-write_home display
+restore_screens display
 
 Rack::Sinatra.run!({
   :display => display, 

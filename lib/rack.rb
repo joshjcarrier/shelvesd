@@ -40,7 +40,7 @@ module Rack
     end
 
     post '/api/v1/system/upgrade', :provides => 'json' do
-      cmd = "git pull origin master && make -f #{IO::File.dirname(__FILE__)}/../Makefile install && reboot"
+      cmd = "cd #{IO::File.dirname(__FILE__)}/../ && git pull && make install && reboot"
       system cmd
       return {:message => 'OK'}.to_json
     end

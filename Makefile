@@ -5,4 +5,4 @@ install: configure
 
 configure:
 	@sudo apt-get install ruby1.9.1-dev ||: # for pi_piper
-	bundle install
+	bundle install ||:

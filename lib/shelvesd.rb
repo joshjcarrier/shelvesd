@@ -30,7 +30,7 @@ class ShelvesApp
       end
     end
 
-    display_page_sec = @config['schedule']['light']['start_hour']
+    display_page_sec = @config['schedule']['display']['page_sec']
     display_pager_thread = Thread.new do
       sleep display_page_sec # initial startup delay
       while true do

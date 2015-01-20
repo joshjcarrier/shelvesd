@@ -8,13 +8,6 @@ module Rack
       super app
       @display = settings.display
       @light = settings.light
-
-      ticker = Thread.new do
-        while true do
-          sleep 5
-          @display.next
-        end
-      end
     end
 
     def self.run!(options)

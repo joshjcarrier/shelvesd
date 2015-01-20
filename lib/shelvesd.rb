@@ -51,21 +51,22 @@ class ShelvesApp
     hostname = `hostname -s`[0..-2]
 
     # line 2
+    light_start = Time.parse("#{@config['schedule']['light']['start_hour']}:#{@config['schedule']['light']['start_min']}").strftime("%I:%M%p")
+    light_end = Time.parse("#{@config['schedule']['light']['end_hour']}:#{@config['schedule']['light']['end_min']}").strftime("%I:%M%p")
+
+    # line 3
     weather_json = `curl -sS http://api.openweathermap.org/data/2.5/weather?id=5809844`
     weather = JSON.parse weather_json
     sunrise = Time.at(weather['sys']['sunrise']).localtime.strftime("%I:%M%p")
     sunset = Time.at(weather['sys']['sunset']).localtime.strftime("%I:%M%p")
-
-    # line 3
-    ip = `ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`[0..-2]
 
     # line 4
     sha1 = `git rev-list HEAD --max-count=1`
 
     display.write({
           :line1 => "shelvesd@#{hostname}",
-          :line2 => "DAY: #{sunrise}-#{sunset}",
-          :line3 => "IP :   #{ip}",
+          :line2 => "DAY: #{light_start}-#{light_end}",
+          :line3 => "SUN: #{sunrise}-#{sunset}",
           :line4 => "GIT: #{sha1}"
     })
   end
@@ -76,9 +77,9 @@ class ShelvesApp
     @config['seedlings'].each_slice(2) do |group|
       display.write({
           :line1 => if group[0] != nil then group[0]['name'] else '' end,
-          :line2 => if group[0] != nil then '%20s' % "sprouts in #{group[0]['germinate_min_days']} days" else '' end,
+          :line2 => if group[0] != nil then '%20s' % "#{group[0]['germinate_min_days']} days to sprout" else '' end,
           :line3 => if group[1] != nil then group[1]['name'] else '' end,
-          :line4 => if group[1] != nil then '%20s' % "sprouts in #{group[1]['germinate_min_days']} days" else '' end
+          :line4 => if group[1] != nil then '%20s' % "#{group[1]['germinate_min_days']} days to sprout" else '' end
       })
     end
   end 

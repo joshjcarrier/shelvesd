@@ -8,24 +8,37 @@ class ShelvesApp
     @display = Display::Factory.create
     @light = Light::Factory.create
 
-    # initialize light to on
-    # TODO light according to schedule
-    @light.on
-
-    @config = YAML.load_file(File.dirname(__FILE__) + "/../configuration.yml")
-
-    restore_screens @display
-
-    ticker = Thread.new do
-      sleep 5 # initial startup delay
-      while true do
-        sleep 5
-        @display.next
-      end
-    end
+    @config = YAML.load_file(File.dirname(__FILE__) + "/../configuration.yml")    
   end
 
   def run!
+    restore_screens @display
+
+    light_schedule_thread = Thread.new do
+      while true do
+        now_time = Time.now
+        light_start_time = Time.new(now_time.year, now_time.month, now_time.day, @config['schedule']['light']['start_hour'], @config['schedule']['light']['start_min'])
+        light_end_time = Time.new(now_time.year, now_time.month, now_time.day, @config['schedule']['light']['end_hour'], @config['schedule']['light']['end_min'])
+
+        if light_start_time <= now_time && now_time <= light_end_time 
+          @light.on
+        else
+          @light.off
+        end
+
+        sleep 60
+      end
+    end
+
+    display_page_sec = @config['schedule']['light']['start_hour']
+    display_pager_thread = Thread.new do
+      sleep display_page_sec # initial startup delay
+      while true do
+        sleep display_page_sec
+        @display.next
+      end
+    end
+
     Rack::Sinatra.run!({
       :display => @display, 
       :light => @light

@@ -1,3 +1,11 @@
+schedule:
+  display:
+    page_sec:             7
+  light:               
+    start_hour:           7
+    start_min:            0
+    end_hour:             22
+    end_min:              0
 seedlings:
   - name:                 Queenette Thai Basil
     start_month:          3

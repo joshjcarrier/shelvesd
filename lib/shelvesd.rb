@@ -50,6 +50,14 @@ light.on
 
 restore_screens display
 
+ticker = Thread.new do
+  sleep 5 # initial startup delay
+  while true do
+    sleep 5
+    display.next
+  end
+end
+
 Rack::Sinatra.run!({
   :display => display, 
   :light => light

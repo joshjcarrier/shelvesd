@@ -8,6 +8,13 @@ module Rack
       super app
       @display = settings.display
       @light = settings.light
+
+      ticker = Thread.new do
+        while true do
+          sleep 5
+          @display.next
+        end
+      end
     end
 
     def self.run!(options)
@@ -32,13 +39,8 @@ module Rack
       @display.read.to_json
     end
 
-    post '/api/v1/system/tick', :provides => 'json' do
-      @display.next
-      return {:message => 'OK'}.to_json
-    end
-
     post '/api/v1/system/upgrade', :provides => 'json' do
-      cmd = "git pull origin master && make -f #{IO::File.dirname(__FILE__)}/../Makefile install"
+      cmd = "git pull origin master && make -f #{IO::File.dirname(__FILE__)}/../Makefile install && reboot"
       system cmd
       return {:message => 'OK'}.to_json
     end

@@ -1,7 +1,7 @@
 schedule:
   display:
     page_sec:             7
-  light:               
+  light:
     start_hour:           7
     start_min:            0
     end_hour:             22
@@ -43,3 +43,15 @@ seedlings:
     germinate_min_days:   10
     germinate_max_days:   12
     harvest_days:         72
+  - name:                 Spearmint
+    start_month:          4
+    light:                part sun
+    germinate_min_days:   7
+    germinate_max_days:   14
+    harvest_days:         90
+  - name:                 German Chamomile
+    start_month:          4
+    light:                full
+    germinate_min_days:   14
+    germinate_max_days:   21
+    harvest_days:         120

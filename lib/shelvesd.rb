@@ -15,12 +15,6 @@ class ShelvesApp
   def run!
     restore_screens @display
 
-    now_time = Time.now
-    light_start_time = Time.new(now_time.year, now_time.month, now_time.day, @config['schedule']['light']['start_hour'], @config['schedule']['light']['start_min'])
-    light_end_time = Time.new(now_time.year, now_time.month, now_time.day, @config['schedule']['light']['end_hour'], @config['schedule']['light']['end_min'])
-
-
-
     light_schedule_thread = Thread.new do
       while true do
         now_time = Time.now
@@ -35,9 +29,9 @@ class ShelvesApp
 
         #calculate best sleep time with minimal interrupts
         if now_time <= light_start_time
-            sleep 10 + light_start_time - now_time
+            sleep_sec = light_start_time - now_time
         elsif now_time <= light_end_time
-            sleep 10 + light_end_time - now_time
+            sleep_sec = light_end_time - now_time
         else
             day_end_time = Time.new(now_time.year, now_time.month, now_time.day, 0, 0) + (60 * 60 * 24)
             evening_sec = day_end_time - now_time
@@ -45,8 +39,10 @@ class ShelvesApp
             day_start_time = Time.new(now_time.year, now_time.month, now_time.day, 0, 0)
             next_morning_sec = light_start_time - day_start_time
 
-            sleep 10 + evening_sec + next_morning_sec
+            sleep_sec = evening_sec + next_morning_sec
         end
+
+        sleep sleep_sec + 10 # a little extra seconds to be inclusive to the next period
       end
     end
 

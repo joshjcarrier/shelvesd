@@ -1,3 +1,6 @@
+notifications:
+  pushbullet:
+    access_token:         
 schedule:
   display:
     page_sec:             7

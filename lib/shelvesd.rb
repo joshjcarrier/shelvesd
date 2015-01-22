@@ -1,6 +1,7 @@
 require 'yaml'
 require_relative 'displays'
 require_relative 'lights'
+require_relative 'notifications'
 require_relative 'rack'
 
 class ShelvesApp
@@ -58,9 +59,14 @@ class ShelvesApp
       end
     end
 
+    notification = Notification::Factory.create({
+      :pushbullet_access_token => @config['notifications']['pushbullet']['access_token'] || ENV['pushbullet_access_token']
+    })
+
     Rack::Sinatra.run!({
       :display => @display,
-      :light => @light
+      :light => @light,
+      :notification => notification
     })
   end
 

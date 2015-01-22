@@ -33,9 +33,9 @@ class ShelvesApp
         end
 
         #calculate best sleep time with minimal interrupts
-        if now_time < light_start_time
+        if now_time <= light_start_time
             sleep 10 + light_start_time - now_time
-        elsif now_time < light_end_time
+        elsif now_time <= light_end_time
             sleep 10 + light_end_time - now_time
         else
             day_end_time = Time.new(now_time.year, now_time.month, now_time.day, 0, 0) + (60 * 60 * 24)

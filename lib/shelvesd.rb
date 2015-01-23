@@ -56,7 +56,7 @@ class ShelvesApp
     end
 
     notification = Notification::Factory.create({
-      :pushbullet_access_token => @config['notifications']['pushbullet']['access_token'] || ENV['pushbullet_access_token']
+      :pushbullet_access_token => @config['notifications']['pushbullet']['access_token'] || ENV['PUSHBULLET_ACCESS_TOKEN']
     })
 
     Rack::Sinatra.run!({

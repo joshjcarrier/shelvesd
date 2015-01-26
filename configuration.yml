@@ -58,3 +58,21 @@ seedlings:
     germinate_min_days:   14
     germinate_max_days:   21
     harvest_days:         120
+  - name:                 Long Purple Eggplant
+    start_month:          2
+    light:                full
+    germinate_min_days:   10
+    germinate_max_days:   21
+    harvest_days:         65
+  - name:                 Stuttgarter Onion
+    start_month:          2
+    light:                full
+    germinate_min_days:   7
+    germinate_max_days:   14
+    harvest_days:         120
+  - name:                 Disoy Soybean
+    start_month:          3
+    light:                full
+    germinate_min_days:   6
+    germinate_max_days:   14
+    harvest_days:         85

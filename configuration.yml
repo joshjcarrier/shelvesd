@@ -5,7 +5,7 @@ schedule:
   display:
     page_sec:             7
   light:
-    start_hour:           8
+    start_hour:           11
     start_min:            0
     end_hour:             21
     end_min:              0
